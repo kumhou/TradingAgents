@@ -13,8 +13,17 @@ def get_YFin_data_online(
     end_date: Annotated[str, "End date in yyyy-mm-dd format"],
 ):
 
-    datetime.strptime(start_date, "%Y-%m-%d")
-    datetime.strptime(end_date, "%Y-%m-%d")
+    from datetime import date as _date, timedelta as _td
+    _sd = datetime.strptime(start_date, "%Y-%m-%d").date()
+    _ed = datetime.strptime(end_date, "%Y-%m-%d").date()
+    # Sanitize the window so an LLM-supplied bad range (future end, or
+    # start >= end) still yields historical data instead of an empty fetch.
+    _today = _date.today()
+    if _ed > _today:
+        _ed = _today
+    if _sd >= _ed:
+        _sd = _ed - _td(days=60)
+    start_date, end_date = _sd.isoformat(), _ed.isoformat()
 
     # Resolve broker/forex symbols to Yahoo's convention (XAUUSD+ -> GC=F).
     canonical = normalize_symbol(symbol)

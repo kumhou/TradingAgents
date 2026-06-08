@@ -59,7 +59,12 @@ _FOREX_CURRENCIES = frozenset(
 
 # Crypto bases that brokers quote against USD without a separator.
 _CRYPTO_BASES = frozenset(
-    {"BTC", "ETH", "SOL", "XRP", "ADA", "DOGE", "LTC", "BCH", "DOT", "AVAX", "LINK"}
+    {
+        "BTC", "ETH", "SOL", "XRP", "ADA", "DOGE", "LTC", "BCH", "DOT", "AVAX",
+        "LINK", "ZEC", "XMR", "DASH", "ETC", "ATOM", "NEAR", "APT", "ARB", "OP",
+        "SUI", "XLM", "ALGO", "FIL", "ICP", "INJ", "TIA", "SEI", "AAVE", "UNI",
+        "TRX", "TON", "SHIB", "PEPE", "MATIC", "BNB", "HBAR", "RNDR", "IMX",
+    }
 )
 
 # Explicit aliases for instruments whose broker symbol does not map to a
@@ -116,6 +121,9 @@ def normalize_symbol(raw: str) -> str:
         canonical = f"{s[:3]}-USD"
     elif s[:-3] in _CRYPTO_BASES and s.endswith("USD") and "-" not in s:
         canonical = f"{s[:-3]}-USD"
+    elif s in _CRYPTO_BASES:
+        # Bare crypto base (e.g. "ZEC", "BTC") -> Yahoo crypto symbol "ZEC-USD".
+        canonical = f"{s}-USD"
     elif len(s) == 6 and s[:3] in _FOREX_CURRENCIES and s[3:] in _FOREX_CURRENCIES:
         canonical = f"{s}=X"
     else:
