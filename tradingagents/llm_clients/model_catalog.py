@@ -73,7 +73,18 @@ _MINIMAX_MODELS: Dict[str, List[ModelOption]] = {
 }
 
 
+_CLI_OPTIONS = [
+    ("Claude Code CLI (your subscription, no API cost)", "claude"),
+    ("Gemini CLI (free tier / subscription)", "gemini"),
+    ("Codex CLI (ChatGPT subscription)", "codex"),
+    ("Qwen Code CLI (free tier)", "qwen"),
+]
+
 MODEL_OPTIONS: ProviderModeOptions = {
+    "cli": {
+        "quick": list(_CLI_OPTIONS),
+        "deep": list(_CLI_OPTIONS),
+    },
     "openai": {
         "quick": [
             ("GPT-5.4 Mini - Fast, strong coding and tool use", "gpt-5.4-mini"),

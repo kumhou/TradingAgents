@@ -38,6 +38,10 @@ def create_llm_client(
     """
     provider_lower = provider.lower()
 
+    if provider_lower == "cli":
+        from .cli_client import CLIClient
+        return CLIClient(model, base_url, **kwargs)
+
     if provider_lower in _OPENAI_COMPATIBLE:
         from .openai_client import OpenAIClient
         return OpenAIClient(model, base_url, provider=provider_lower, **kwargs)
